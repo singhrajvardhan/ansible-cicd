@@ -1,0 +1,18 @@
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Add this step BEFORE running ansible-playbook
+      - name: Disable SSH host key checking
+        run: |
+          echo "Host *" >> ~/.ssh/config
+          echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+          echo "  UserKnownHostsFile=/dev/null" >> ~/.ssh/config
+
+      # Now run your playbook
+      - name: Run Ansible Playbook
+        run: |
+          ansible-playbook playbook.yml -i inventory.yml
